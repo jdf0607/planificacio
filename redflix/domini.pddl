@@ -1,0 +1,1 @@
+//aquest arxiu serà pel domini
