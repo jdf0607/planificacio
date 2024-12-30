@@ -6,6 +6,7 @@
         )
     (:predicates
         (predecessor ?precedent - contingut ?seguent - contingut)
+        (paralels ?contigut1 - contingut ?contigut2 - contingut)
         (continguts-vistos ?continguts - contingut)
         
         )
