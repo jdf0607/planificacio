@@ -9,17 +9,20 @@
         (continguts-vistos ?continguts - contingut)
         
         )
-    (:action afegir-visionat
-        :parameters (
-            ?cal_veure - contingut
-            ?per_veure - contingut
-        )
+     (:action afegir-visionat
+        :parameters (?veure - contingut)
         :precondition (and
-            (predecessor ?cal_veure ?per_veure)
-            (not (continguts-vistos ?cal_veure))
+            (forall (?p - contingut)
+                (or 
+                    (not (predecessor ?p ?veure)) 
+                    (continguts-vistos ?p)       
+                )
+            )
+            (not (continguts-vistos ?veure))     
         )
-        :effect (and 
-            (continguts-vistos ?cal_veure))
+        :effect (and
+            (continguts-vistos ?veure)
+        )
     )
 
 )

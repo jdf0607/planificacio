@@ -5,11 +5,11 @@
 	)
 	(:init 
 		(predecessor c1 c2)
-        (predecessor c2 c3)
-        (predecessor c3 c4)
+		(predecessor c2 c3)
+		(predecessor c3 c4)
         (predecessor c4 c5)
     )
         
-	(:goal (continguts-vistos c4))
+	(:goal (and (continguts-vistos c5)))
 
 	)
