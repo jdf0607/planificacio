@@ -28,14 +28,15 @@
             (forall (?p - contingut)
                 (or 
                     (and (not (paralel ?veure ?p))
-                        (not (paralel ?p ?veure)))
-                    (continguts-vistos ?p)
+                        (not (paralel ?p ?veure))) ;no son paralels
+                    (continguts-vistos ?p) ;el contingut ja està al visionat
                     (or (assignat-a-dia ?p ?dia)
                         (exists (?d - dia) (and (assignat-a-dia ?p ?d) (dia-seguent ?dia ?d)))
-                    )
+                    ); el contingut és veu el mateix dia o al dia anterior
                     (and (not (continguts-vistos ?p))
                         (not (exists (?p2 - contingut) (and (not (continguts-vistos ?p))(predecessor ?p2 ?p))))
-                    )
+                    ) ;el contingut no ha sigut vist peró no li fa falta cap predecessor per ser vist
+                    ;assegutem no veure un contingut si d'un paralel seu no hem vist els seus predecessors.
                 )
 
             )
