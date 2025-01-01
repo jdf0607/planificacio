@@ -27,16 +27,17 @@
             )
             (forall (?p - contingut)
                 (or 
-                    (not (paralel ?veure ?p)) ;no es predecessor
-                    (and (paralel ?veure ?p) 
-                         (or (assignat-a-dia ?veure ?dia)
-                            (exists (?d - dia)
-                                (and (assignat-a-dia ?p ?d)
-                                    (dia-seguent ?dia ?d))
-                            )
-                         )
-                   )
-                )                
+                    (and (not (paralel ?veure ?p))
+                        (not (paralel ?p ?veure)))
+                    (continguts-vistos ?p)
+                    (or (assignat-a-dia ?p ?dia)
+                        (exists (?d - dia) (and (assignat-a-dia ?p ?d) (dia-seguent ?dia ?d)))
+                    )
+                    (and (not (continguts-vistos ?p))
+                        (not (exists (?p2 - contingut) (and (not (continguts-vistos ?p))(predecessor ?p2 ?p))))
+                    )
+                )
+
             )
             
         )
