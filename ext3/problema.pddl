@@ -34,6 +34,7 @@
 		(assignacions-3 dia7)
 		(assignacions-3 dia8)
 		(assignacions-3 dia9)
+		(assignacions-3 dia10)
     )
         
 	(:goal (and (continguts-vistos c1) 
