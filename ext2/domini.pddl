@@ -38,9 +38,15 @@
                 (or 
                     (and (not (paralel ?veure ?p))
                         (not (paralel ?p ?veure))) ;no son paralels
-                    (continguts-vistos ?p) ;el contingut ja està al visionat
+                    (and (continguts-vistos ?p)
+                        (or (assignat-a-dia ?p ?dia)
+                            (exists 
+                                (?d - dia) 
+                                (and (assignat-a-dia ?p ?d) (dia-seguent ?d ?dia))                
+                            )
+                         )) ;el contingut ja està al visionat
                     (or (assignat-a-dia ?p ?dia)
-                        (exists (?d - dia) (and (assignat-a-dia ?p ?d) (dia-seguent ?dia ?d)))
+                        (exists (?d - dia) (and (assignat-a-dia ?p ?d) (dia-seguent ?d ?dia)))
                     ); el contingut és veu el mateix dia o al dia anterior
                     (and (not (continguts-vistos ?p))
                         (not (exists (?p2 - contingut) (and (not (continguts-vistos ?p))(predecessor ?p2 ?p))))
