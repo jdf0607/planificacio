@@ -11,21 +11,29 @@
         (assignat-a-dia ?contingut - contingut ?dia  - dia)
         (dia-seguent ?dia1 - dia ?dia2 - dia)
         )
-     (:action afegir-visionat
+    (:action afegir-visionat
         :parameters (?veure - contingut ?dia - dia)
         :precondition (and
-            (not (continguts-vistos ?veure))
+            (not (continguts-vistos ?veure)) ;;El contingut encara no ha sigut visionat
+
+            ;; Per tots els predecessors del contingut a veure, assegurem que:
+            ;; 1. No es un predecessor
+            ;; 2.Si es un predecessor, aquest ja ha sigut visionat i no ha sigut assignat al dia actual
             (forall (?p - contingut)
                 (or 
-                    (not (predecessor ?p ?veure)) ;no es predecessor
-                    (and (predecessor ?p ?veure) 
-                         (continguts-vistos ?p)
-                         (not (assignat-a-dia ?p ?dia)) ;es predecessor i s'ha vist o assignat per veure
-                   )
+                    (not (predecessor ?p ?veure)) ; No es predecessor
+                    (and
+                        (continguts-vistos ?p)    ; El predecessor ha sigut visionat
+                        (forall (?dp - dia)
+                            (imply
+                                (assignat-a-dia ?p ?dp) 
+                                (dia-seguent ?dp ?dia)  
+                            )
+                        )
+                    )
                 )
             )
         )
-        :effect (and (assignat-a-dia ?veure ?dia)(continguts-vistos ?veure))
-    
+        :effect (and (assignat-a-dia ?veure ?dia) (continguts-vistos ?veure)   )
     )
 )
