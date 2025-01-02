@@ -9,6 +9,7 @@
         (predecessor ?precedent - contingut ?seguent - contingut)
         (continguts-vistos ?continguts - contingut)
         (assignat-a-dia ?contingut - contingut ?dia  - dia)
+        (dia-seguent ?dia1 - dia ?dia2 - dia)
         )
      (:action afegir-visionat
         :parameters (?veure - contingut ?dia - dia)

@@ -11,9 +11,9 @@
         (predecessor c4 c5)
         (predecessor c5 c6)
         (predecessor c8 c9)
-         (predecessor c9 c10)
+        (predecessor c9 c10)
          
-         (paralel c6 c7)
+        (paralel c6 c7)
          
 		(dia-seguent dia1 dia2)
 		(dia-seguent dia2 dia3)
