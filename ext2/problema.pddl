@@ -26,6 +26,15 @@
 		(dia-seguent dia9 dia10)
     )
         
-	(:goal (and (continguts-vistos c7) (continguts-vistos c10)))
+	(:goal (and (continguts-vistos c1) 
+				(continguts-vistos c2) 
+				(continguts-vistos c3) 
+				(continguts-vistos c4) 
+				(continguts-vistos c5) 
+				(continguts-vistos c6) 
+				(continguts-vistos c7) 
+				(continguts-vistos c8)
+				(continguts-vistos c9)
+				(continguts-vistos c10)))
 
 )
