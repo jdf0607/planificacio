@@ -24,6 +24,17 @@
 		(dia-seguent dia7 dia8)
 		(dia-seguent dia8 dia9)
 		(dia-seguent dia9 dia10)
+
+		(assignacions-3 dia1)
+		(assignacions-3 dia2)
+		(assignacions-3 dia3)
+		(assignacions-3 dia4)
+		(assignacions-3 dia5)
+		(assignacions-3 dia6)
+		(assignacions-3 dia7)
+		(assignacions-3 dia8)
+		(assignacions-3 dia9)
+		(assignacions-3 dia10)
     )
         
 	(:goal (and (continguts-vistos c1) 
