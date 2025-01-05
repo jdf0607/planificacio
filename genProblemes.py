@@ -57,14 +57,19 @@ class ProblemaPDDL:
         fitxer.writelines(contingut)
         fitxer.close()
 
-def domini1(nomProb):
-    problema = ProblemaPDDL(nomProb, "domini")
+def generarContinguts(problema):
     numConts = int(input("Introduir el nombre de continguts a crear: "))
     for i in range (1, numConts + 1):
         problema.afegirObjecte("contingut",  "cont" + str(i))
+    return numConts
+
+def generarDies(problema):
     numDies = int(input("Introduir el nombre de dies de marge: "))
     for i in range (1, numDies + 1):
         problema.afegirObjecte("dia", "dia" + str(i))
+    return numDies
+
+def generarPredecessors(problema, numConts):
     parells, i = [], 0
     while i < random.randrange(numConts // 2, numConts * 2 + 1):
         pred, succ = random.randrange(1, numConts + 1), random.randrange(1, numConts + 1)
@@ -74,13 +79,23 @@ def domini1(nomProb):
         i += 1
     for p in parells:
         problema.afegirPredicatInicial(("predecessor", "cont" + str(p[0]), "cont" + str(p[1])))
+    return parells
+
+def generarSeqDies(problema, numDies):
     for d in range(1, numDies):
         problema.afegirPredicatInicial(("dia-seguent", "dia" + str(d), "dia" + str(d + 1)))
+
+def generarContingutsJaVistos(problema, numConts):
     contsVistos = []
     for _ in range(0, random.randrange(0, numConts // 2)):
         c = random.randrange(1, numConts + 1)
+        while c in contsVistos:
+            c = random.randrange(1, numConts + 1)
         contsVistos.append(c)
         problema.afegirPredicatInicial(("continguts-vistos", "cont" + str(c)))
+    return contsVistos
+
+def generarContingutsPerVeure(problema, numConts, contsVistos):
     i = 0
     while i < random.randrange(1, numConts - len(contsVistos) + 1):
         c = random.randrange(1, numConts + 1)
@@ -89,6 +104,38 @@ def domini1(nomProb):
         contsVistos.append(c)
         problema.afegirPredicatObjectiu(("continguts-vistos", "cont" + str(c)))
         i += 1
+
+def generarParalels(problema, numConts, parells):
+    i = 0
+    while i < random.randrange(numConts // 2, numConts * 2 + 1):
+        p1 = random.randrange(1, numConts)
+        p2 = random.randrange(p1 + 1, numConts + 1)
+        if ((p1, p2) in parells) or ((p2, p1) in parells) or p1 == p2:
+            continue
+        parells.append((p1, p2))
+        problema.afegirPredicatInicial(("paralel", "cont" + str(p1), "cont" + str(p2)))
+        i += 1
+    return parells
+
+def domini1(nomProb):
+    problema = ProblemaPDDL(nomProb, "domini")
+    numConts = generarContinguts(problema)
+    numDies = generarDies(problema)
+    generarPredecessors(problema, numConts)
+    generarSeqDies(problema, numDies)
+    contsVistos = generarContingutsJaVistos(problema, numConts)
+    generarContingutsPerVeure(problema, numConts, contsVistos)
+    problema.generarProblema()
+
+def domini2(nomProb):
+    problema = ProblemaPDDL(nomProb, "domini")
+    numConts = generarContinguts(problema)
+    numDies = generarDies(problema)
+    parells = generarPredecessors(problema, numConts)
+    generarParalels(problema, numConts, parells)
+    generarSeqDies(problema, numDies)
+    contsVistos = generarContingutsJaVistos(problema, numConts)
+    generarContingutsPerVeure(problema, numConts, contsVistos)
     problema.generarProblema()
 
 nomProb = input("Introduir el nom del fitxer de problema per crear: ")
@@ -102,3 +149,5 @@ while not (numOpcio in range(1, 5)):
     numOpcio = int(input("Introduir el nombre de selecció: "))
 if numOpcio == 1:
     domini1(nomProb)
+elif numOpcio == 2:
+    domini2(nomProb)
