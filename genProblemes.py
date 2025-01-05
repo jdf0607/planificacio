@@ -45,7 +45,7 @@ class ProblemaPDDL:
             contingut.extend(")\n")
         contingut.extend([self.__indentacio, ")\n"])
         # Predicats objectiu
-        contingut.extend([self.__indentacio, "(:goal ", "(and"])
+        contingut.extend([self.__indentacio, "(:goal ", "(and\n"])
         for pred in self.__predicatsObj:
             contingut.extend([self.__indentacio, self.__indentacio, "("])
             for elem in pred:
@@ -68,25 +68,26 @@ def domini1(nomProb):
     parells, i = [], 0
     while i < random.randrange(numConts // 2, numConts * 2 + 1):
         pred, succ = random.randrange(1, numConts + 1), random.randrange(1, numConts + 1)
-        if ((pred, succ) in parells) or ((succ, pred) in parells):
+        if ((pred, succ) in parells) or ((succ, pred) in parells) or pred == succ:
             continue
         parells.append((pred, succ))
         i += 1
     for p in parells:
-        problema.afegirPredicatInicial(("predecessor", "c" + str(p[0]), "c" + str(p[1])))
+        problema.afegirPredicatInicial(("predecessor", "cont" + str(p[0]), "cont" + str(p[1])))
     for d in range(1, numDies):
         problema.afegirPredicatInicial(("dia-seguent", "dia" + str(d), "dia" + str(d + 1)))
     contsVistos = []
     for _ in range(0, random.randrange(0, numConts // 2)):
         c = random.randrange(1, numConts + 1)
         contsVistos.append(c)
-        problema.afegirPredicatInicial(("continguts-vistos", "c" + str(c)))
+        problema.afegirPredicatInicial(("continguts-vistos", "cont" + str(c)))
     i = 0
     while i < random.randrange(1, numConts - len(contsVistos) + 1):
         c = random.randrange(1, numConts + 1)
         if c in contsVistos:
             continue
-        problema.afegirPredicatObjectiu(("continguts-vistos", "c" + str(c)))
+        contsVistos.append(c)
+        problema.afegirPredicatObjectiu(("continguts-vistos", "cont" + str(c)))
         i += 1
     problema.generarProblema()
 
