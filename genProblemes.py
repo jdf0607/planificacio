@@ -10,7 +10,7 @@ class ProblemaPDDL:
         self.__objectes = {} # Treballem amb problemes amb objectes tipats
         self.__predicatsIni = [] # Predicats en forma de tupla
         self.__predicatsObj = []
-        self.__indentacio = "   " # Un espai menys que la indentació que es desitja
+        self.__indentacio = "   "
 
     def afegirObjecte(self, tipus, nom):
         if not (tipus in self.__objectes):
@@ -57,19 +57,19 @@ class ProblemaPDDL:
         fitxer.writelines(contingut)
         fitxer.close()
 
-def generarContinguts(problema):
+def generarContinguts(problema: ProblemaPDDL):
     numConts = int(input("Introduir el nombre de continguts a crear: "))
     for i in range (1, numConts + 1):
         problema.afegirObjecte("contingut",  "cont" + str(i))
     return numConts
 
-def generarDies(problema):
+def generarDies(problema: ProblemaPDDL):
     numDies = int(input("Introduir el nombre de dies de marge: "))
     for i in range (1, numDies + 1):
         problema.afegirObjecte("dia", "dia" + str(i))
     return numDies
 
-def generarPredecessors(problema, numConts):
+def generarPredecessors(problema: ProblemaPDDL, numConts):
     parells, i = [], 0
     while i < random.randrange(numConts // 2, numConts * 2 + 1):
         pred, succ = random.randrange(1, numConts + 1), random.randrange(1, numConts + 1)
@@ -81,11 +81,11 @@ def generarPredecessors(problema, numConts):
         problema.afegirPredicatInicial(("predecessor", "cont" + str(p[0]), "cont" + str(p[1])))
     return parells
 
-def generarSeqDies(problema, numDies):
+def generarSeqDies(problema: ProblemaPDDL, numDies):
     for d in range(1, numDies):
         problema.afegirPredicatInicial(("dia-seguent", "dia" + str(d), "dia" + str(d + 1)))
 
-def generarContingutsJaVistos(problema, numConts):
+def generarContingutsJaVistos(problema: ProblemaPDDL, numConts):
     contsVistos = []
     for _ in range(0, random.randrange(0, numConts // 2)):
         c = random.randrange(1, numConts + 1)
@@ -95,7 +95,7 @@ def generarContingutsJaVistos(problema, numConts):
         problema.afegirPredicatInicial(("continguts-vistos", "cont" + str(c)))
     return contsVistos
 
-def generarContingutsPerVeure(problema, numConts, contsVistos):
+def generarContingutsPerVeure(problema: ProblemaPDDL, numConts, contsVistos):
     i = 0
     while i < random.randrange(1, numConts - len(contsVistos) + 1):
         c = random.randrange(1, numConts + 1)
@@ -105,7 +105,7 @@ def generarContingutsPerVeure(problema, numConts, contsVistos):
         problema.afegirPredicatObjectiu(("continguts-vistos", "cont" + str(c)))
         i += 1
 
-def generarParalels(problema, numConts, parells):
+def generarParalels(problema: ProblemaPDDL, numConts, parells):
     i = 0
     while i < random.randrange(numConts // 2, numConts * 2 + 1):
         p1 = random.randrange(1, numConts)
@@ -116,6 +116,10 @@ def generarParalels(problema, numConts, parells):
         problema.afegirPredicatInicial(("paralel", "cont" + str(p1), "cont" + str(p2)))
         i += 1
     return parells
+
+def generarAssignacionsDies(problema: ProblemaPDDL, numDies):
+    for d in range(1, numDies + 1):
+        problema.afegirPredicatInicial(("assignacions-3", "dia" + str(d)))
 
 def domini1(nomProb):
     problema = ProblemaPDDL(nomProb, "domini")
@@ -138,6 +142,18 @@ def domini2(nomProb):
     generarContingutsPerVeure(problema, numConts, contsVistos)
     problema.generarProblema()
 
+def domini3(nomProb):
+    problema = ProblemaPDDL(nomProb, "domini")
+    numConts = generarContinguts(problema)
+    numDies = generarDies(problema)
+    parells = generarPredecessors(problema, numConts)
+    generarParalels(problema, numConts, parells)
+    generarSeqDies(problema, numDies)
+    generarAssignacionsDies(problema, numDies)
+    contsVistos = generarContingutsJaVistos(problema, numConts)
+    generarContingutsPerVeure(problema, numConts, contsVistos)
+    problema.generarProblema()
+
 nomProb = input("Introduir el nom del fitxer de problema per crear: ")
 print("Seleccionar amb el nombre corresponent per a quina extensió del domini es vol generar un problema:")
 print("\t1. Continguts predecessors, planificats en dies anteriors.")
@@ -151,3 +167,5 @@ if numOpcio == 1:
     domini1(nomProb)
 elif numOpcio == 2:
     domini2(nomProb)
+elif numOpcio == 3:
+    domini3(nomProb)
