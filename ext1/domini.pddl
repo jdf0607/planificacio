@@ -19,16 +19,26 @@
             ;; Per tots els predecessors del contingut a veure, assegurem que:
             ;; 1. No es un predecessor
             ;; 2.Si es un predecessor, aquest ja ha sigut visionat i no ha sigut assignat al dia actual
-            (forall (?p - contingut)
-                (or 
-                    (not (predecessor ?p ?veure)) ; No es predecessor
+            ; (forall (?p - contingut)
+            ;     (or 
+            ;         (not (predecessor ?p ?veure)) ; No es predecessor
+            ;         (and
+            ;             (continguts-vistos ?p)    ; El predecessor ha sigut visionat
+            ;             (forall (?dp - dia)
+            ;                 (imply
+            ;                     (assignat-a-dia ?p ?dp) 
+            ;                     (dia-seguent ?dp ?dia)  
+            ;                 )
+            ;             )
+            ;         )
+            ;     )
+            ; )
+            (forall (?p - contingut ?d - dia) 
+                (imply (predecessor ?p ?veure)
                     (and
-                        (continguts-vistos ?p)    ; El predecessor ha sigut visionat
-                        (forall (?dp - dia)
-                            (imply
-                                (assignat-a-dia ?p ?dp) 
-                                (dia-seguent ?dp ?dia)  
-                            )
+                        (continguts-vistos ?p)
+                        (imply (assignat-a-dia ?p ?d)
+                            (dia-seguent ?d ?dia)
                         )
                     )
                 )
