@@ -115,10 +115,13 @@ def generarContingutsPerVeure(problema: ProblemaPDDL, numConts, contsVistos):
 
 def generarParalels(problema: ProblemaPDDL, numConts, parells):
     i = 0
-    while i < random.randrange(numConts // 2, numConts * 2 + 1):
+    precedents = set({})
+    for p in parells:
+        precedents.add(p[0])
+    while i < random.randrange(1, numConts - len(precedents)):
         p1 = random.randrange(1, numConts)
         p2 = random.randrange(p1 + 1, numConts + 1)
-        if ((p1, p2) in parells) or ((p2, p1) in parells) or p1 == p2:
+        if (p1 in precedents) or (p2 in precedents) or ((p1, p2) in parells):
             continue
         parells.append((p1, p2))
         problema.afegirPredicatInicial(("paralel", "cont" + str(p1), "cont" + str(p2)))
