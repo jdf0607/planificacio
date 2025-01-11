@@ -89,8 +89,9 @@ def generarPredecessors(problema: ProblemaPDDL, numConts):
     return parells
 
 def generarSeqDies(problema: ProblemaPDDL, numDies):
-    for d in range(1, numDies):
-        problema.afegirPredicatInicial(("dia-seguent", "dia" + str(d), "dia" + str(d + 1)))
+    for di in range(1, numDies):
+        for df in range(di, numDies):
+            problema.afegirPredicatInicial(("dia-seguent", "dia" + str(di), "dia" + str(df + 1)))
 
 def generarContingutsJaVistos(problema: ProblemaPDDL, numConts):
     contsVistos = []
