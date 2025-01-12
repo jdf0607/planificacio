@@ -21,6 +21,12 @@ class ProblemaPDDL:
     def afegirPredicatInicial(self, pred):
         self.__predicatsIni.append(pred)
 
+    def obtenirPredicatsIniPerTipus(self, tipus):
+        return [p for p in self.__predicatsIni if p[0] == tipus]
+
+    def modificarPredicatInicial(self, predOriginal, predNou):
+        self.__predicatsIni = [predNou if p == predOriginal else p for p in self.__predicatsIni]
+
     def afegirFuncioInicial(self, op, pred, valIni):
         parLlista = ["("]
         parLlista.extend(pred)
@@ -93,6 +99,10 @@ def generarSeqDies(problema: ProblemaPDDL, numDies):
         for df in range(di, numDies):
             problema.afegirPredicatInicial(("dia-seguent", "dia" + str(di), "dia" + str(df + 1)))
 
+def generarDiesConsec(problema: ProblemaPDDL, numDies):
+    for d in range(1, numDies):
+        problema.afegirPredicatInicial(("dies-consecutius", "dia" + str(d), "dia" + str(d + 1)))
+
 def generarContingutsJaVistos(problema: ProblemaPDDL, numConts):
     contsVistos = []
     for _ in range(0, random.randrange(0, numConts // 2)):
@@ -110,6 +120,10 @@ def generarContingutsPerVeure(problema: ProblemaPDDL, numConts, contsVistos):
         if c in contsVistos:
             continue
         contsVistos.append(c)
+        predsParalels = problema.obtenirPredicatsIniPerTipus("paralel")
+        for pp in predsParalels:
+            if pp[2] == "cont" + str(c):
+                problema.modificarPredicatInicial(pp, (pp[0], pp[2], pp[1]))
         problema.afegirPredicatObjectiu(("continguts-vistos", "cont" + str(c)))
         i += 1
 
@@ -159,6 +173,7 @@ def domini2(nomProb):
     parells = generarPredecessors(problema, numConts)
     generarParalels(problema, numConts, parells)
     generarSeqDies(problema, numDies)
+    generarDiesConsec(problema, numDies)
     contsVistos = generarContingutsJaVistos(problema, numConts)
     generarContingutsPerVeure(problema, numConts, contsVistos)
     problema.generarProblema()

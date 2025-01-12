@@ -24,6 +24,16 @@
 		(dia-seguent dia7 dia8)
 		(dia-seguent dia8 dia9)
 		(dia-seguent dia9 dia10)
+
+		(dies-consecutius dia1 dia2 )
+		(dies-consecutius dia2 dia3 )
+		(dies-consecutius dia3 dia4 )
+		(dies-consecutius dia4 dia5 )
+		(dies-consecutius dia5 dia6 )
+		(dies-consecutius dia6 dia7 )
+		(dies-consecutius dia7 dia8 )
+		(dies-consecutius dia8 dia9 )
+		(dies-consecutius dia9 dia10 )
     )
         
 	(:goal (and (continguts-vistos c1) 
