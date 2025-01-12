@@ -18,6 +18,7 @@
          dia)
       (paralel ?c1 - contingut ?c2 - contingut)
       (dia-seguent ?dia1 - dia ?dia2 - dia)
+      (dies-consecutius ?dia1 - dia ?dia2 - dia)
    )
 
    (:functions
@@ -34,41 +35,26 @@
          ;; Per tots els predecessors del contingut a veure, assegurem que:
          ;; 1. No es un predecessor
          ;; 2.Si es un predecessor, aquest ja ha sigut visionat i no ha sigut assignat al dia actual
-         (forall
-            (?p - contingut)
-            (or
-               (not (predecessor ?p ?veure)) ; No es predecessor
-               (and
-                  (continguts-vistos ?p) ; El predecessor ha sigut visionat
-                  (forall
-                     (?dp - dia)
-                     (imply
-                        (assignat-a-dia ?p ?dp)
-                        (dia-seguent ?dp ?dia)
-                     )
-                  )
-               )
+         (forall (?p - contingut ?d - dia) 
+                (imply (predecessor ?p ?veure)
+                    (and
+                        (continguts-vistos ?p)
+                        (imply (assignat-a-dia ?p ?d)
+                            (dia-seguent ?d ?dia)
+                        )
+                    )                    
+                )
             )
-         )
-         (forall
-            (?p - contingut)
-            (or
-               (and (not (paralel ?veure ?p))
-                  (not (paralel ?p ?veure))) ;no son paralels
-               (continguts-vistos ?p) ;el contingut ja està al visionat
-               (or (assignat-a-dia ?p ?dia)
-                  (exists
-                     (?d - dia)
-                     (and (assignat-a-dia ?p ?d) (dia-seguent ?dia ?d)))
-               ); el contingut és veu el mateix dia o al dia anterior
-               (and (not (continguts-vistos ?p))
-                  (not (exists
-                        (?p2 - contingut)
-                        (and (not (continguts-vistos ?p))(predecessor ?p2 ?p))))
-               ) ;el contingut no ha sigut vist peró no li fa falta cap predecessor per ser vist
-               ;assegutem no veure un contingut si d'un paralel seu no hem vist els seus predecessors.
+            (forall (?p - contingut ?d - dia) 
+                (imply (paralel ?veure ?p)
+                    (and
+                        (continguts-vistos ?p)
+                        (imply (assignat-a-dia ?p ?d)
+                            (or (= ?d ?dia) (dies-consecutius ?d ?dia))
+                        )
+                    )
+                )
             )
-         )
          (and
             (< (contingutsEnDia ?dia) 4)
             (< (+ (minutsEnDia ?dia) (minutsVisionat ?veure)) 201)
